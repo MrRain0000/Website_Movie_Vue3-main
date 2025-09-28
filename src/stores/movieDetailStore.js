@@ -18,6 +18,7 @@ export const useMovieDetailStore = defineStore('movieDetail', {
       return {
         name: state.movie.name,
         origin_name: state.movie.origin_name,
+        slug: state.movie.slug,
         poster_url: state.movie.poster_url,
         thumb_url: state.movie.thumb_url,
         year: state.movie.year,
@@ -32,7 +33,10 @@ export const useMovieDetailStore = defineStore('movieDetail', {
         director: state.movie.director,
         category: state.movie.category,
         country: state.movie.country,
-        trailer_url: state.movie.trailer_url
+        trailer_url: state.movie.trailer_url,
+         // Thêm thông tin rating
+        rating: state.movie.tmdb?.vote_average || 0,
+        tmdb: state.movie.tmdb || null
       }
     },
     
