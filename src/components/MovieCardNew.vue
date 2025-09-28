@@ -69,9 +69,20 @@ export default {
     },
 
     getRating() {
-      return this.movie.tmdb && this.movie.tmdb.vote_average
-        ? this.movie.tmdb.vote_average
-        : 0;
+       // Ưu tiên sử dụng rating từ movie.rating (đã được thêm vào movieInfo)
+      if (this.movie.rating !== undefined && this.movie.rating !== null) {
+        console.log('Using movie.rating:', this.movie.rating, 'for movie:', this.movie.name);
+        return this.movie.rating;
+      }
+
+      // Fallback to tmdb.vote_average (for backward compatibility)
+      if (this.movie.tmdb && this.movie.tmdb.vote_average) {
+        console.log('Using tmdb.vote_average:', this.movie.tmdb.vote_average, 'for movie:', this.movie.name);
+        return this.movie.tmdb.vote_average;
+      }
+
+      console.log('No rating found for movie:', this.movie.name, 'movie object:', this.movie);
+      return 0;
     },
 
     formatRating(rating) {
