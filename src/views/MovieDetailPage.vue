@@ -424,14 +424,11 @@ export default {
 
   computed: {
     isSaved() {
-      if (!this.movieDetailStore.movieInfo) {
-        console.log('No movieInfo for isSaved check');
+     if (!this.movieDetailStore.movieInfo) {
         return false;
       }
       const slug = this.movieDetailStore.movieInfo.slug;
-      const saved = this.savedMoviesStore.isMovieSaved(slug);
-      console.log(`Checking if movie ${slug} is saved:`, saved);
-      return saved;
+      return this.savedMoviesStore.isMovieSaved(slug);
     },
   },
 
@@ -439,17 +436,17 @@ export default {
   methods: {
     toggleSaveMovieHandler() {
       console.log('Toggle save clicked');
-      console.log('MovieInfo:', this.movieDetailStore.movieInfo);
-      console.log('Current saved state:', this.isSaved);
-      
+     
       if (this.movieDetailStore.movieInfo) {
-        // Pass the entire movieInfo object to ensure all data is saved
         this.savedMoviesStore.toggleSaveMovie(this.movieDetailStore.movieInfo);
-        console.log('After toggle - saved state:', this.isSaved);
-        console.log('Saved movies:', this.savedMoviesStore.savedMovies);
+
+        this.$nextTick(() => {
+          console.log('After toggle - saved state:', this.isSaved);
+          console.log('Saved movies count:', this.savedMoviesStore.savedMovies.length);
+        });
       } else {
         console.error('No movieInfo available');
-      }
+      }    
     },
 
     async loadMovieDetail() {
