@@ -881,7 +881,12 @@ export default {
 }
 
 .suggestion-year {
-  font-size: 0.8rem;
+  font-size: 13px;
+  color: #ff6b6b !important;
+  margin-top: 2px;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .view-all {
