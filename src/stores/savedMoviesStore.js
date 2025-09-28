@@ -15,8 +15,8 @@ export const useSavedMoviesStore = defineStore('savedMovies', {
   actions: {
     addMovie(movie) {
       // Đảm bảo movie và movie.slug tồn tại trước khi thêm
-      if (movie && movie.slug && !this.isMovieSaved(movie.slug)) {
-        // Create a plain JavaScript object clone to remove reactivity before saving
+     if (movie && movie.slug && !this.isMovieSaved(movie.slug)) {
+        console.log('Adding movie with rating:', movie.rating || 'No rating');
         const movieClone = JSON.parse(JSON.stringify(movie));
         this.savedMovies.push(movieClone);
         this.updateLocalStorage();
@@ -24,11 +24,19 @@ export const useSavedMoviesStore = defineStore('savedMovies', {
     },
 
     removeMovie(movieSlug) {
+     const initialLength = this.savedMovies.length;
       this.savedMovies = this.savedMovies.filter(movie => movie.slug !== movieSlug);
-      this.updateLocalStorage();
+      if (this.savedMovies.length < initialLength) {
+        this.updateLocalStorage();
+      }
     },
 
     toggleSaveMovie(movie) {
+      if (!movie || !movie.slug) {
+        console.error('Movie object or slug is missing');
+        return;
+      }
+
       if (this.isMovieSaved(movie.slug)) {
         this.removeMovie(movie.slug);
       } else {
@@ -37,13 +45,22 @@ export const useSavedMoviesStore = defineStore('savedMovies', {
     },
 
     updateLocalStorage() {
-      localStorage.setItem('savedMovies', JSON.stringify(this.savedMovies));
+      try {
+        localStorage.setItem('savedMovies', JSON.stringify(this.savedMovies));
+      } catch (error) {
+        console.error('Error saving to localStorage:', error);
+      }
     },
 
     loadMovies() {
-      const movies = localStorage.getItem('savedMovies');
-      if (movies) {
-        this.savedMovies = JSON.parse(movies);
+     try {
+        const movies = localStorage.getItem('savedMovies');
+        if (movies) {
+          this.savedMovies = JSON.parse(movies);
+        }
+      } catch (error) {
+        console.error('Error loading from localStorage:', error);
+        this.savedMovies = [];
       }
     }
   },
