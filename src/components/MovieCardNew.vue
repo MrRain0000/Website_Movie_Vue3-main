@@ -8,6 +8,16 @@
         loading="lazy"
       />
       
+      <!-- Remove button (dấu X) -->
+      <button
+        v-if="showRemoveButton"
+        class="remove-button"
+        @click.stop="removeMovie"
+        :title="'Xóa ' + movie.name + ' khỏi danh sách đã lưu'"
+      >
+        <i class="bi bi-x"></i>
+      </button>
+      
       <!-- Gradient overlay luôn hiển thị -->
       <div class="movie-overlay-permanent">
         <!-- Episode badge ở góc trên phải -->
@@ -52,6 +62,10 @@ export default {
     movie: {
       type: Object,
       required: true,
+    },
+    showRemoveButton: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -114,6 +128,12 @@ export default {
 
     goToMovieDetail() {
       this.$router.push(`/phim/${this.movie.slug}`);
+    },
+
+    removeMovie() {
+      console.log('Remove movie clicked for:', this.movie.slug);
+      console.log('showRemoveButton prop:', this.showRemoveButton);
+      this.$emit('remove-movie', this.movie.slug);
     },
   },
 };
@@ -315,16 +335,16 @@ export default {
   }
 
   .play-button {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
   }
 
-  .episode-badge {
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
+  .remove-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d); /* Cùng màu với desktop */
   }
 }
 
@@ -391,10 +411,43 @@ export default {
     height: 40px;
     font-size: 1.2rem;
   }
+}
 
-  .episode-badge {
-    font-size: 0.6rem;
-    padding: 0.15rem 0.3rem;
-  }
+/* Remove button (dấu X) */
+.remove-button {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(45deg, #ff6b6b, #ffd93d); /* Đổi màu giống episode badge */
+  border: 2px solid rgba(255, 255, 255, 0.9); /* Tăng opacity viền trắng */
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+}
+
+.remove-button:hover {
+  background: linear-gradient(45deg, #ff8a8a, #ffdd5d); /* Màu hover sáng hơn */
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.remove-button i {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.remove-button:active {
+  transform: scale(0.95);
 }
 </style>
